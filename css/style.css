@@ -1,0 +1,393 @@
+/*insert style here*/
+
+/* Stylesheet by Zhiyi Li, 2024 */
+
+body {
+    background-color: #f9f9f9;
+    font-family: 'Arial', sans-serif;
+}
+
+.countries {
+    fill: #FFF;
+    stroke: #CCC;
+    stroke-width: 2px;
+}
+
+.countries {
+    fill: #FFF;
+    stroke: #CCC;
+    stroke-width: 2px;
+}
+
+.gratBackground {
+    fill: #F5F5F5;
+}
+
+
+.gratLines {
+    fill: none;
+    stroke: #999;
+    stroke-width: 1px;
+}
+
+.regions {
+    stroke: #000;
+    stroke-width: 0.5px;
+    stroke-linecap: round;
+}
+
+.dropdown {
+    position: absolute;
+    top: 210px;
+    left: 1400px;
+    z-index: 10;
+    font-family: sans-serif;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 2px;
+    border: 1px solid #999;
+    box-shadow: 2px 2px 4px #999;
+}
+
+
+.container {
+    display: flex;           /* Establishes a flex container */
+    justify-content: center; /* Centers children horizontally */
+    align-items: stretch;    /* Stretches children to fit the container height */
+    width: 85%;             /* Optional: spans the full width of the viewport */
+    height: 100vh;           /* Optional: spans the full height of the viewport */
+}
+.chart-container {
+    flex: 1;                 /* Takes up 1 part of the available space */
+    margin: 20px 0 0 20px;
+    height:500px
+    /* Additional styling as needed */
+}
+
+.map-container {
+    flex: 2;                 /* Takes up 2 parts of the available space, making it larger than the chart */
+}
+
+#map {
+    position:relative;/*border: medium solid #999;*/
+    margin: 20px 0 0 0px;
+}
+
+#resetMap {
+    position:absolute;
+    padding: 8px 16px;
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+}
+#resetMap:hover {
+    background-color: #e9ecef;
+}
+
+
+.chart {
+    position:absolute;
+    top:300px;
+    padding:10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+    bottom: 200px;
+}
+
+.species-list {
+    top: 300px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin: 20px 20px 0 0;
+}
+
+.chartTitle {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.chartFrame {
+    fill: none;
+    stroke: #999;
+    stroke-width: 3px;
+    shape-rendering: crispEdges;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #999;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 0.8em;
+    fill: #999;
+}
+
+#chartDescription {
+    width: 100%; /* Adjust width as necessary */
+    padding: 300px;
+    background-color: #f4f4f4; /* Light grey background for better readability */
+    border-top: 1px solid #ccc; /* Adds a line between the chart and description */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: adds subtle shadow for depth */
+    margin-top: 10px; /* Ensures there is a space between the chart and the description */
+    font-size: 14px;
+    color: #333;
+    text-align: center; /* Centers the text */
+    bottom: 300px;
+}
+
+
+option {
+    font-weight: normal;
+}
+
+
+.infolabel h1 {
+    margin: 0 20px 0 0;
+    padding: 0;
+    display: inline-block;
+    line-height: 1.2em;
+}
+
+.infolabel {    
+    margin: 0 20px 0 10px;    
+    position: absolute;
+    height: 56px;
+    min-width: 100px;
+    color: #fff;
+    background-color: #000000;
+    border: solid thin #fff;
+    padding: 6px 10px;
+    top: -75px;
+}
+
+/* Style for the page title */
+.page-title {
+    text-align: center; /* Center align the title */
+    margin-top: 20px; /* Adjust top margin as needed */
+    padding: 10px; /* Add padding for space around the title */
+    /*background-color: rgb(35, 121, 52); /* Add background color */
+    color: #205223;
+    /*color: white; /* Add text color */
+    font-size: 28px; /* Adjust font size */
+}
+
+/* Style for the introduction panel */
+.introduction-panel {
+    background-color: #f2f2f2; /* Add background color */
+    padding: 2px; /* Add padding for space around the content */
+    font-size: 18px; /* Adjust font size */
+    padding-left: 20px;
+    padding-right: 20px;
+    margin: 0px 20px 0px 20px;
+
+}
+#toolDescriptionContainer {
+    padding: 10px;
+    margin: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.tool-description p {
+    font-size: 14px;
+    color: #333;
+}
+
+
+.small-text {
+    font-size: 0.8em; /* Adjust the font size as needed */
+}
+
+.controls {
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    left: 50%; /* Center align the controls */
+    transform: translateX(-50%); /* Ensure it's centered regardless of the actual width */
+    z-index: 1000; /* Ensures the controls stay on top of the map layers */
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 10px;
+}
+
+.input, .dropdown {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin: 20px 20px 40px 0px;
+}
+
+#stateSearch {
+    position:absolute;
+    display:flex;
+    justify-content: space-between;
+    margin-right: 10px; /* Add some spacing between the input and button */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+  
+#searchButton {
+    position: absolute;
+    left: 260px;
+    z-index: 10;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    background-color: #0da982;/*rgb(35, 121, 52); /* Blue color for the button */
+    color: #fff; /* White text color */
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+#searchDescription {
+    background-color: rgb(35, 121, 52);
+}
+
+#right-panel {
+    position: absolute;
+    right: 0;
+    width: 18.5%;
+    height: 680px;
+    overflow-y: auto; /* Enables scrolling if content is too long */
+    background-color:#FFFFFF;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    margin: 20px 20px 0px 0px;
+    box-shadow: -4px 0 6px -2px #e0e0e0; /* Soft shadow on the left edge */
+}
+
+/* Group Headers in the Right Panel */
+.group-header {
+    margin-top: 20px;
+    font-weight: bold;
+    background: linear-gradient(145deg, #f5f5f5, #bae5d9);
+    padding: 5px 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+}
+
+.species-list {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.species-list li {
+    padding: 5px 8px;
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.species-list li:hover {
+    background-color: #f7f7f7; /* Highlight item on hover */
+    cursor: pointer; /* Indicates interactivity */
+}
+
+#tooltip {
+    position: absolute;  
+    visibility: hidden;  
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    z-index: 1000;  
+    max-width: 400px;
+    word-wrap: break-word;
+    padding:10px;
+    overflow: hidden;  
+    text-overflow: ellipsis;  
+    white-space: normal; 
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+#toolDescription {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-top: 10px;
+}
+.tooltip {
+    position: absolute;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 3px;
+    display: none;  /* Initially hidden */
+    z-index: 100;
+    white-space: nowrap;
+}
+
+#resetButton + #resetTooltip {  /* Positions the tooltip right above the button */
+    margin-top: -35px;  /* Adjust as necessary */
+    margin-left: -10px;  /* Centers tooltip based on the button's width */
+}
+
+#dropdown-container + #dropdownTooltip {
+    margin-top: -30px;  /* Moves the tooltip above the dropdown */
+    margin-left: 0px;   /* Aligns with the left edge of the dropdown */
+}
+
+
+.map-tool:hover + .tooltip {
+    display: block;
+}
+
+#initialPage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 1000; /* Ensure it's above all other content */
+}
+
+#initialPage .content {
+    max-width: 600px;
+    padding: 20px;
+}
+
+.tooltip {
+    width: auto;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -60px; /* Adjust as necessary */
+}
+
+.search-bar:hover + .tooltip {
+    visibility: visible;
+}
+
+

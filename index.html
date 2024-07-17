@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+            <title>Endangered Species in U.S.</title>
+
+        <!--put your external stylesheet links here-->
+        <link rel="stylesheet" href="lib/leaflet.css">
+        <link rel="stylesheet" href="css/style.css">
+
+        <!--[if IE<9]>
+            <link rel="stylesheet" href="css/style.ie.css">
+        <![endif]-->
+
+         <!--you can also place internal styles here;
+             place these within <style> tags-->
+
+        <style></style>
+        
+    </head>
+
+    <body>
+        <!--put your initial page content here-->
+        <div id="initialPage" onclick="continueToMap()">
+            <div class="content">
+                <h1>Welcome to Madison Crime Incident Map</h1>
+                <p>Welcome page content</p>
+                <p>Click anywhere to continue.</p>
+            </div>
+        </div>
+        <div id="mydiv"></div>
+        
+
+        <!--you can also use this space for internal scripts;
+        place these within <script> tags-->
+        <div class="container">
+            
+            <div class="chart-container">
+                <div class="dropdown-container">
+                    <div id="dropdownTooltip" class="tooltip" style="display: absolute;">Description of what selecting different options does.</div>
+                </div> <!-- Container for the dropdown -->
+            </div> <!-- Container for the chart -->
+
+            <div class="map-container">
+                <div id="map">
+                    <button id="resetMap">Reset Map</button>
+                    <div id="resetTooltip" class="tooltip">Click to reset the map to its original view.</div>
+                </div>
+                
+            </div>   <!-- Container for the map -->
+            <div id="right-panel">Click on a state to see more information.</div>
+            <div id="tooltip"></div>
+            </div>
+        </div>
+        <div id="toolDescriptionContainer"></div>
+
+
+        <script type="text/javascript" src="lib/d3.v7.js"></script>
+        <script type="text/javascript" src="lib/topojson/topojson.js"></script>
+        
+
+        <!--put your external script links here-->
+        <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="lib/jquery-3.5.1.js"></script>
+    </body>
+</html>

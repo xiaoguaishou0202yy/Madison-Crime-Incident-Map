@@ -107,7 +107,7 @@ function setMap(){
         .center([12.64, 42])
         .rotate([102, 0, 0])
         .parallels([40, 75])
-        .scale(3200)
+        .scale(3000)
         .translate([width / 2, height / 2]);
 
     var path = d3.geoPath()
@@ -117,13 +117,13 @@ function setMap(){
     var promises = [];    
     promises.push(d3.csv("data/Species.csv")); //load attributes from csv    
     promises.push(d3.json("data/countries.topojson")); //load background spatial data    
-    promises.push(d3.json("data/states.topojson")); //load choropleth spatial data    
+    promises.push(d3.json("data/Neighborhood_Associations.topojson")); //load choropleth spatial data    
     promises.push(d3.csv("data/species_az.csv")); //load attributes from csv 
     Promise.all(promises).then(callback);
 
     function callback(data){    
         csvData = data[0];    
-        countries = "data/Neighborhood_Associations.geojson";   
+        countries = data[1];   
         states = data[2]; 
         csvSpecies = data[3];
 
@@ -136,7 +136,7 @@ function setMap(){
 
         // Translate TopoJSON to GeoJSON
         var worldCountries = topojson.feature(countries, countries.objects.world_administrative_boundaries),
-            usStates = topojson.feature(states, states.objects.ne_110m_admin_1_states_provinces).features;
+            usStates = topojson.feature(states, states.objects.Neighborhood_Associations).features;
 
         console.log(worldCountries);
        

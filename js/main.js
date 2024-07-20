@@ -13,14 +13,24 @@ function setMap() {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Load and display the neighborhood associations data
-    d3.json("data/Neighborhood_Associations.topojson").then(function(states) {
-        console.log("States TopoJSON:", states);
+    //use Promise.all to parallelize asynchronous data loading
+    var promises = []; 
+    promises.push(d3.csv("data/species_az.csv")); //load attributes from csv      
+    promises.push(d3.json("data/Neighborhood_Associations.topojson")); //load choropleth spatial data    
+    Promise.all(promises).then(callback);
+
+    function callback(data){    
+        csvData = data[0];    
+        nbhs = data[1];   
+
+        console.log(csvData);
+        console.log(nbhs.objects);
 
         // Translate TopoJSON to GeoJSON
-        var neighborhoodAssociations = topojson.feature(states, states.objects.Neighborhood_Associations).features;
-
+        var neighborhoodAssociations = topojson.feature(nbhs, nbhs.objects.Neighborhood_Associations).features;
         console.log("Neighborhood Associations GeoJSON:", neighborhoodAssociations);
+    
+
 
         // Create an SVG layer for D3 overlay
         var svg = d3.select(map.getPanes().overlayPane).append("svg");
@@ -62,7 +72,7 @@ function setMap() {
         }
 
         console.log("Neighborhood paths added to map.");
-    })
+    }
 }
 
 function continueToMap() {

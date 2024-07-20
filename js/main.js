@@ -3,7 +3,6 @@ window.onload = function() {
 };
 
 
-
 function setMap() {
     // Initialize Leaflet map
     var map = L.map('map').setView([43.1, -89.4], 12); // Adjust the center and zoom level as needed
@@ -15,21 +14,24 @@ function setMap() {
 
     //use Promise.all to parallelize asynchronous data loading
     var promises = []; 
-    promises.push(d3.csv("data/species_az.csv")); //load attributes from csv      
+    //promises.push(d3.csv("data/species_az.csv")); //load attributes from csv      
     promises.push(d3.json("data/Neighborhood_Associations.topojson")); //load choropleth spatial data    
+    promises.push(d3.json("data/Incidents.topojson"));
     Promise.all(promises).then(callback);
 
     function callback(data){    
-        csvData = data[0];    
-        nbhs = data[1];   
+        nbhs = data[0];    
+        incd = data[1];   
+        //csvData = data[2];
 
-        console.log(csvData);
+        //console.log(csvData);
         console.log(nbhs.objects);
 
         // Translate TopoJSON to GeoJSON
         var neighborhoodAssociations = topojson.feature(nbhs, nbhs.objects.Neighborhood_Associations).features;
+        var incidents = topojson.feature(incd, incd.objects.collection).features;
         console.log("Neighborhood Associations GeoJSON:", neighborhoodAssociations);
-    
+        console.log("Incidents GeoJSON:", incidents);
 
 
         // Create an SVG layer for D3 overlay
@@ -45,9 +47,22 @@ function setMap() {
         var transform = d3.geoTransform({point: projectPoint});
         var path = d3.geoPath().projection(transform);
 
-        var feature = g.selectAll("path")
+        // Add neighborhood paths
+        var neighborhoodPaths = g.selectAll(".neighborhood")
             .data(neighborhoodAssociations)
-            .enter().append("path");
+            .enter().append("path")
+            .attr("class", "neighborhood")
+            .style("fill", "none")
+            .style("stroke", "black");
+
+        // Add incident points
+        var incidentPoints = g.selectAll(".incident")
+            .data(incidents)
+            .enter().append("circle")
+            .attr("class", "incident")
+            .attr("r", 3) // Adjust the radius as needed
+            .style("fill", "red")
+            .style("stroke", "none");
 
         map.on("viewreset", reset);
         map.on("zoom", reset); // Added event listener for zoom (highlighted)
@@ -66,10 +81,13 @@ function setMap() {
 
             g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
 
-            feature.attr("d", path)
-                .style("fill", "none")
-                .style("stroke", "black");
-        }
+            neighborhoodPaths.attr("d", path);
+
+            incidentPoints.attr("transform", function(d) {
+                var point = path.centroid(d);
+                return "translate(" + point[0] + "," + point[1] + ")";
+            });
+            }
 
         console.log("Neighborhood paths added to map.");
     }

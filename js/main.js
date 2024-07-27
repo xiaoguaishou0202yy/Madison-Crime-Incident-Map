@@ -51,27 +51,26 @@ function callback(data) {
     // Define styles for different incident types
     var styleTypes = {
         "Intoxicated/Impaired Driver": {radius: 3, fillColor: "yellow", color: "yellow", shape: "circle"},
-        "Traffic Incident": {radius: 3, fillColor: "purple", color: "purple", shape: "circle"},
-        "Weapons Violation": {radius: 3, fillColor: "Blue", color: "blue", shape: "circle"},
+        "Traffic Incident": {radius: 3, fillColor: "cyan", color: "cyan", shape: "circle"},
+        "Weapons Violation": {radius: 3, fillColor: "orange", color: "orange", shape: "circle"},
     };
 
     // Add incident points
     incidents.forEach(function(incident) {
         var incidentType = incident.properties.IncidentType;
-        var style = styleTypes[incidentType] || {radius: 3, fillColor: "gray", color: "gray", shape: "circle"}; 
+        var style = styleTypes[incidentType] || {radius: 3, fillColor: "purple", color: "purple", shape: "circle"}; 
         var coords = incident.geometry.coordinates;
 
         var marker;
-        if (style.shape === "circle") {
-            marker = L.circleMarker([coords[1], coords[0]], {
-                radius: style.radius,
-                fillColor: style.fillColor,
-                color: style.color,
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            }).bindPopup('<b>' + incidentType + '</b><br>' + incident.properties.Details);
-        }
+        marker = L.circleMarker([coords[1], coords[0]], {
+            radius: style.radius,
+            fillColor: style.fillColor,
+            color: style.color,
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+        }).bindPopup('<b>' + incidentType + '</b><br>' + incident.properties.Details);
+
 
         if (marker) {
             marker.addTo(map);

@@ -1,125 +1,119 @@
+var map, neighborhoodAssociations, incidents, incidentMarkers = [];
+
 window.onload = function() { 
     setMap(); 
 };
 
-
 function setMap() {
     // Initialize Leaflet map
-    var map = L.map('map').setView([43.1, -89.4], 12); // Adjust the center and zoom level as needed
+    map = L.map('map').setView([43.1, -89.4], 12);
 
     // Add OpenStreetMap tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    //use Promise.all to parallelize asynchronous data loading
+    // Use Promise.all to parallelize asynchronous data loading
     var promises = []; 
-    //promises.push(d3.csv("data/species_az.csv")); //load attributes from csv      
-    promises.push(d3.json("data/Neighborhood_Associations.topojson")); //load choropleth spatial data    
+    promises.push(d3.json("data/Neighborhood_Associations.topojson"));    
     promises.push(d3.json("data/Incidents.topojson"));
     Promise.all(promises).then(callback);
+}
 
-    function callback(data){    
-        nbhs = data[0];    
-        incd = data[1];   
-        //csvData = data[2];
+function callback(data) {    
+    var nbhs = data[0];    
+    var incd = data[1];   
+    // Translate TopoJSON to GeoJSON
+    neighborhoodAssociations = topojson.feature(nbhs, nbhs.objects.Neighborhood_Associations).features;
+    incidents = topojson.feature(incd, incd.objects.collection).features;
 
-        //console.log(csvData);
-        console.log(nbhs.objects);
+    // Create an SVG layer for D3 overlay
+    var svg = d3.select(map.getPanes().overlayPane).append("svg");
+    var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
+    // Create a project function to convert latitude and longitude to map positions
+    function projectPoint(x, y) {
+        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+        this.stream.point(point.x, point.y);
+    }
 
-        // Translate TopoJSON to GeoJSON
-        var neighborhoodAssociations = topojson.feature(nbhs, nbhs.objects.Neighborhood_Associations).features;
-        var incidents = topojson.feature(incd, incd.objects.collection).features;
-        console.log("Neighborhood Associations GeoJSON:", neighborhoodAssociations);
-        console.log("Incidents GeoJSON:", incidents);
+    var transform = d3.geoTransform({point: projectPoint});
+    var path = d3.geoPath().projection(transform);
 
+    // Add neighborhood paths
+    var neighborhoodPaths = g.selectAll(".neighborhood")
+        .data(neighborhoodAssociations)
+        .enter().append("path")
+        .attr("class", "neighborhood")
+        .style("fill", "none")
+        .style("stroke", "black");
 
-        // Create an SVG layer for D3 overlay
-        var svg = d3.select(map.getPanes().overlayPane).append("svg");
-        var g = svg.append("g").attr("class", "leaflet-zoom-hide");
+    // Define styles for different incident types
+    var styleTypes = {
+        "Intoxicated/Impaired Driver": {radius: 5, fillColor: "red", color: "red", shape: "circle"},
+        "Traffic Incident": {radius: 5, fillColor: "purple", color: "purple", shape: "circle"},
+        "Weapons Violation": {radius: 5, fillColor: "yellow", color: "blue", shape: "circle"},
+    };
 
-        // Create a project function to convert latitude and longitude to map positions
-        function projectPoint(x, y) {
-            var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-            this.stream.point(point.x, point.y);
+    // Add incident points
+    incidents.forEach(function(incident) {
+        var incidentType = incident.properties.IncidentType;
+        var style = styleTypes[incidentType] || {radius: 5, fillColor: "gray", color: "gray", shape: "circle"}; 
+        var coords = incident.geometry.coordinates;
+
+        var marker;
+        if (style.shape === "circle") {
+            marker = L.circleMarker([coords[1], coords[0]], {
+                radius: style.radius,
+                fillColor: style.fillColor,
+                color: style.color,
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).bindPopup('<b>' + incidentType + '</b><br>' + incident.properties.Details);
         }
 
-        var transform = d3.geoTransform({point: projectPoint});
-        var path = d3.geoPath().projection(transform);
+        if (marker) {
+            marker.addTo(map);
+            incidentMarkers.push({marker: marker, type: incidentType});
+        }
+    });
 
-        // Add neighborhood paths
-        var neighborhoodPaths = g.selectAll(".neighborhood")
-            .data(neighborhoodAssociations)
-            .enter().append("path")
-            .attr("class", "neighborhood")
-            .style("fill", "none")
-            .style("stroke", "black");
+    map.on("viewreset", reset);
+    map.on("zoom", reset); 
+    reset();
 
-        // Define styles for different incident types
-        var styleTypes = {
-            "Intoxicated/Impaired Driver": {radius: 5, fillColor: "red", color: "red", shape: "circle"},
-            "Traffic Incident": {radius: 5, fillColor: "purple", color: "purple", shape: "circle"},
-            "Weapons Violation": {radius: 5, fillColor: "yellow", color: "blue", shape: "circle"},
-            // Add more types as needed
-        };
+    // Function to reset and reposition the SVG layer
+    function reset() {
+        var bounds = path.bounds({type: "FeatureCollection", features: neighborhoodAssociations}),
+            topLeft = bounds[0],
+            bottomRight = bounds[1];
 
-        // Add incident points
-        incidents.forEach(function(incident) {
-            var incidentType = incident.properties.IncidentType;
-            var style = styleTypes[incidentType] || {radius: 5, fillColor: "gray", color: "gray", shape: "circle"}; // Use default style if type is not defined
-            var coords = incident.geometry.coordinates;
+        svg.attr("width", bottomRight[0] - topLeft[0])
+            .attr("height", bottomRight[1] - topLeft[1])
+            .style("left", topLeft[0] + "px")
+            .style("top", topLeft[1] + "px");
 
-            if (style.shape === "circle") {
-                L.circleMarker([coords[1], coords[0]], {
-                    radius: style.radius,
-                    fillColor: style.fillColor,
-                    color: style.color,
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.8
-                }).addTo(map).bindPopup('<b>' + incidentType + '</b><br>' + incident.properties.Details);
-            } else if (style.shape === "square") {
-                L.rectangle([
-                    [coords[1] - 0.0001, coords[0] - 0.0001],
-                    [coords[1] + 0.0001, coords[0] + 0.0001]
-                ], {
-                    color: style.color,
-                    weight: 1,
-                    fillColor: style.fillColor,
-                    fillOpacity: 0.8
-                }).addTo(map).bindPopup('<b>' + incidentType + '</b><br>' + incident.properties.Details);
-            }
-        });
+        g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
 
-        map.on("viewreset", reset);
-        map.on("zoom", reset); // Added event listener for zoom (highlighted)
-        reset();
-
-        // Function to reset and reposition the SVG layer
-        function reset() {
-            var bounds = path.bounds({type: "FeatureCollection", features: neighborhoodAssociations}),
-                topLeft = bounds[0],
-                bottomRight = bounds[1];
-
-            svg.attr("width", bottomRight[0] - topLeft[0])
-                .attr("height", bottomRight[1] - topLeft[1])
-                .style("left", topLeft[0] + "px")
-                .style("top", topLeft[1] + "px");
-
-            g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
-
-            neighborhoodPaths.attr("d", path);
-
-            }
-
-        console.log("Neighborhood paths added to map.");
+        neighborhoodPaths.attr("d", path);
     }
+
+    console.log("Neighborhood paths added to map.");
+}
+
+function filterIncidents() {
+    var selectedType = document.getElementById('incidentTypeFilter').value;
+    incidentMarkers.forEach(function(entry) {
+        if (selectedType === "All" || entry.type === selectedType) {
+            entry.marker.addTo(map);
+        } else {
+            map.removeLayer(entry.marker);
+        }
+    });
 }
 
 function continueToMap() {
     var initialPage = document.getElementById('initialPage');
-
-    // Hide the initial page
     initialPage.style.display = 'none';
 }

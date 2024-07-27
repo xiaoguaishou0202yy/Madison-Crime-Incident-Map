@@ -27,6 +27,7 @@ function setMap() {
         //console.log(csvData);
         console.log(nbhs.objects);
 
+
         // Translate TopoJSON to GeoJSON
         var neighborhoodAssociations = topojson.feature(nbhs, nbhs.objects.Neighborhood_Associations).features;
         var incidents = topojson.feature(incd, incd.objects.collection).features;
@@ -55,14 +56,41 @@ function setMap() {
             .style("fill", "none")
             .style("stroke", "black");
 
+        // Define styles for different incident types
+        var styleTypes = {
+            "Intoxicated/Impaired Driver": {radius: 5, fillColor: "red", color: "red", shape: "circle"},
+            "Traffic Incident": {radius: 5, fillColor: "purple", color: "purple", shape: "circle"},
+            "Weapons Violation": {radius: 5, fillColor: "yellow", color: "blue", shape: "circle"},
+            // Add more types as needed
+        };
+
         // Add incident points
-        var incidentPoints = g.selectAll(".incident")
-            .data(incidents)
-            .enter().append("circle")
-            .attr("class", "incident")
-            .attr("r", 3) // Adjust the radius as needed
-            .style("fill", "red")
-            .style("stroke", "none");
+        incidents.forEach(function(incident) {
+            var incidentType = incident.properties.IncidentType;
+            var style = styleTypes[incidentType] || {radius: 5, fillColor: "gray", color: "gray", shape: "circle"}; // Use default style if type is not defined
+            var coords = incident.geometry.coordinates;
+
+            if (style.shape === "circle") {
+                L.circleMarker([coords[1], coords[0]], {
+                    radius: style.radius,
+                    fillColor: style.fillColor,
+                    color: style.color,
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(map).bindPopup('<b>' + incidentType + '</b><br>' + incident.properties.Details);
+            } else if (style.shape === "square") {
+                L.rectangle([
+                    [coords[1] - 0.0001, coords[0] - 0.0001],
+                    [coords[1] + 0.0001, coords[0] + 0.0001]
+                ], {
+                    color: style.color,
+                    weight: 1,
+                    fillColor: style.fillColor,
+                    fillOpacity: 0.8
+                }).addTo(map).bindPopup('<b>' + incidentType + '</b><br>' + incident.properties.Details);
+            }
+        });
 
         map.on("viewreset", reset);
         map.on("zoom", reset); // Added event listener for zoom (highlighted)
@@ -83,10 +111,6 @@ function setMap() {
 
             neighborhoodPaths.attr("d", path);
 
-            incidentPoints.attr("transform", function(d) {
-                var point = path.centroid(d);
-                return "translate(" + point[0] + "," + point[1] + ")";
-            });
             }
 
         console.log("Neighborhood paths added to map.");

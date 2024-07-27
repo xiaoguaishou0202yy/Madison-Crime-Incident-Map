@@ -29,6 +29,9 @@
                 <p>Click anywhere to continue.</p>
             </div>
         </div>
+
+        <h1 class="page-title">Madison Crime Incident Map</h1> <!-- Added main title -->
+        
         <div id="mydiv"></div>
         
 
@@ -36,24 +39,26 @@
         place these within <script> tags-->
         <div class="container">
             
-            <div class="chart-container">
-                <div class="dropdown-container">
-                    <div id="dropdownTooltip" class="tooltip" style="display: absolute;">Description of what selecting different options does.</div>
-                </div> <!-- Container for the dropdown -->
-            </div> <!-- Container for the chart -->
+            <div class="left-container">
+                <label for="incidentTypeFilter">Filter by Incident Type:</label>
+                <select id="incidentTypeFilter" onchange="filterIncidents()">
+                    <option value="all">All</option>
+                    <option value="Disturbance">Disturbance</option>
+                    <option value="Theft">Theft</option>
+                    <option value="Assault">Assault</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div> 
 
             <div class="map-container">
                 <div id="map" style="height: 680px; width: 100%;">
-                    <button id="resetMap">Reset Map</button>
-                    <div id="resetTooltip" class="tooltip">Click to reset the map to its original view.</div>
                 </div>
                 
             </div>   <!-- Container for the map -->
-            <div id="right-panel">Click on a state to see more information.</div>
-            <div id="tooltip"></div>
-            </div>
+
+            <div id="right-container">Info</div>
+
         </div>
-        <div id="toolDescriptionContainer"></div>
 
         <!--put your external script links here-->
         <script type="text/javascript" src="lib/leaflet-src.js"></script>

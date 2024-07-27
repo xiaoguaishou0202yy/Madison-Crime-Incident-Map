@@ -45,20 +45,20 @@ function callback(data) {
         .data(neighborhoodAssociations)
         .enter().append("path")
         .attr("class", "neighborhood")
-        .style("fill", "none")
+        .style("fill", "rgba(0, 0, 0, 0.1)") // Transparent fill color
         .style("stroke", "black");
 
     // Define styles for different incident types
     var styleTypes = {
-        "Intoxicated/Impaired Driver": {radius: 5, fillColor: "red", color: "red", shape: "circle"},
-        "Traffic Incident": {radius: 5, fillColor: "purple", color: "purple", shape: "circle"},
-        "Weapons Violation": {radius: 5, fillColor: "yellow", color: "blue", shape: "circle"},
+        "Intoxicated/Impaired Driver": {radius: 3, fillColor: "yellow", color: "yellow", shape: "circle"},
+        "Traffic Incident": {radius: 3, fillColor: "purple", color: "purple", shape: "circle"},
+        "Weapons Violation": {radius: 3, fillColor: "Blue", color: "blue", shape: "circle"},
     };
 
     // Add incident points
     incidents.forEach(function(incident) {
         var incidentType = incident.properties.IncidentType;
-        var style = styleTypes[incidentType] || {radius: 5, fillColor: "gray", color: "gray", shape: "circle"}; 
+        var style = styleTypes[incidentType] || {radius: 3, fillColor: "gray", color: "gray", shape: "circle"}; 
         var coords = incident.geometry.coordinates;
 
         var marker;

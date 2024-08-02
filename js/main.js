@@ -58,19 +58,19 @@ function callback(data) {
     // Add incident points
     incidents.forEach(function(incident) {
         var incidentType = incident.properties.IncidentType;
-        var style = styleTypes[incidentType] || {radius: 3, fillColor: "purple", color: "purple", shape: "circle"}; 
         var coords = incident.geometry.coordinates;
+        var iconUrl = incident.properties.icon; // Assuming 'icon' property contains the URL to the icon
 
-        var marker;
-        marker = L.circleMarker([coords[1], coords[0]], {
-            radius: style.radius,
-            fillColor: style.fillColor,
-            color: style.color,
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.8
-        }).bindPopup('<b>' + incidentType + '</b><br>' + incident.properties.Details);
 
+        var markerIcon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: [25, 25], // size of the icon
+            iconAnchor: [12, 12], // point of the icon which will correspond to marker's location
+            popupAnchor: [0, -12] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var marker = L.marker([coords[1], coords[0]], { icon: markerIcon })
+            .bindPopup('<b>' + incidentType + '</b><br>' + incident.properties.Details);
 
         if (marker) {
             marker.addTo(map);

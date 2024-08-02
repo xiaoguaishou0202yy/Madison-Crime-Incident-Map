@@ -70,8 +70,10 @@ function callback(data) {
         });
 
         var marker = L.marker([coords[1], coords[0]], { icon: markerIcon })
-            .bindPopup('<b>' + incidentType + '</b><br>' + incident.properties.Details);
-
+            .bindPopup('<b>' + incidentType + '</b><br>' + incident.properties.Details)
+            .on('click', function() {
+                showIncidentDetails(incident);
+            });
         if (marker) {
             marker.addTo(map);
             incidentMarkers.push({marker: marker, type: incidentType});
@@ -115,4 +117,14 @@ function filterIncidents() {
 function continueToMap() {
     var initialPage = document.getElementById('initialPage');
     initialPage.style.display = 'none';
+}
+
+
+// Function to update the right container with incident details
+function showIncidentDetails(incident) {
+    var details = `
+        <h3>${incident.properties.IncidentType}</h3>
+        <p>${incident.properties.Details}</p>
+    `;
+    document.getElementById('right-container').innerHTML = details;
 }

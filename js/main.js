@@ -69,8 +69,18 @@ function callback(data) {
             popupAnchor: [0, -12] // point from which the popup should open relative to the iconAnchor
         });
 
+        var popupContent = `
+            <b>Incident Type: </b>${incidentType}<br>
+            <strong>Address:</strong> ${incident.properties.address}<br>
+            <strong>Case Number:</strong> ${incident.properties.CaseNumber}<br>
+            <strong>Incident Date:</strong> ${incident.properties.IncidentDate}<br>
+            ${displayField('Victim', incident.properties.Victim)}
+            ${displayField('Arrested', incident.properties.Arrested)}
+            ${displayField('Suspect', incident.properties.Suspect)}
+        `;
+
         var marker = L.marker([coords[1], coords[0]], { icon: markerIcon })
-            .bindPopup('<b>' + incidentType + '</b><br>' + incident.properties.Details)
+            .bindPopup(popupContent)
             .on('click', function() {
                 showIncidentDetails(incident);
             });
@@ -127,4 +137,9 @@ function showIncidentDetails(incident) {
         <p>${incident.properties.Details}</p>
     `;
     document.getElementById('right-container').innerHTML = details;
+}
+
+// Utility function to conditionally display fields
+function displayField(label, value) {
+    return value ? `<strong>${label}:</strong> ${value}<br>` : '';
 }

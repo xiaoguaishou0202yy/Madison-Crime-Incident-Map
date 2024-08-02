@@ -59,10 +59,9 @@ function callback(data) {
     incidents.forEach(function(incident) {
         var incidentType = incident.properties.IncidentType;
         var coords = incident.geometry.coordinates;
-        var iconUrl = incident.properties.icon; // Assuming 'icon' property contains the URL to the icon
+        var iconUrl = "img/"+incidentType+".png"; // Assuming 'icon' property contains the URL to the icon
 
 
-        console.log("Icon URL:", iconUrl);
         var markerIcon = L.icon({
             iconUrl: iconUrl,
             iconSize: [25, 25], // size of the icon

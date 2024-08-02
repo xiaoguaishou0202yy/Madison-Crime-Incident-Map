@@ -62,6 +62,7 @@ function callback(data) {
         var iconUrl = incident.properties.icon; // Assuming 'icon' property contains the URL to the icon
 
 
+        console.log("Icon URL:", iconUrl);
         var markerIcon = L.icon({
             iconUrl: iconUrl,
             iconSize: [25, 25], // size of the icon

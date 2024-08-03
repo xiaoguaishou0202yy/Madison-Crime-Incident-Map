@@ -112,6 +112,9 @@ function callback(data) {
         neighborhoodPaths.attr("d", path);
     }
 
+
+    var chartContainer = document.querySelector(".chart-container");
+
     console.log("Neighborhood paths added to map.");
 }
 

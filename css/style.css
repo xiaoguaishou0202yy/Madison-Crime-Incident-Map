@@ -1,23 +1,25 @@
 /* Stylesheet by Zhiyi Li, 2024 */
 
 body {
-    background-color: #f9f9f9;
+    background-color: #a44646;
     font-family: 'Arial', sans-serif;
+    margin: 0; /* Remove default margin */
 }
 
 /* Style for the main title */
 .page-title {
     text-align: center; /* Center align the title */
-    margin-top: 20px; /* Adjust top margin as needed */
-    padding: 10px; /* Add padding for space around the title */
-    color: #621616;
-    font-size: 28px; /* Adjust font size */
+    margin-top: 10px; /* Adjust top margin as needed */
+    padding: 10px 0px; /* Add padding for space around the title */
+    color: #FFFFFF;
+    font-size: 32px; /* Adjust font size */
+    background-color: #621616; /* Darker shade for the title background */
 }
 
 .container {
     display: flex;           /* Establishes a flex container */
     width: 100%;             /* Spans the full width of the viewport */
-    height: 100vh;           /* Spans the full height of the viewport */
+    height: calc(100vh-52px);           /* Spans the full height of the viewport */
 }
 
 
@@ -28,7 +30,7 @@ body {
     padding: 20px;
     box-sizing: border-box;
     margin: 20px 20px 20px 20px; /* Adds margin around the container */
-    box-shadow: -4px 0 6px -2px #e0e0e0; /* Soft shadow on the left edge */
+    box-shadow: -4px 0 6px -2px rgba(0, 0, 0, 0.1); /* Soft shadow on the left edge */
     position: relative;
 }
 
@@ -36,6 +38,8 @@ body {
     flex: 3;                 /* Takes up 3 parts of the available space, making it larger than the chart */
     position: relative;
     margin: 20px 20px 20px 0; /* Adds margin around the container */
+    background-color: #f2f2f2; /* Light grey background */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Slight shadow */
 }
 
 #map {
@@ -43,28 +47,29 @@ body {
     height: 100%;
 }
 
+
+/* Right container style */
 #right-container {
-    flex: 1;                 /* Takes up 1 part of the available space */
-    height: calc(100vh - 40px); /* Subtract margin from full viewport height */
-    overflow-y: auto;        /* Enables scrolling if content is too long */
+    flex: 1;
+    overflow-y: auto;
     background-color: #FFFFFF;
     padding: 20px;
     box-sizing: border-box;
-    margin: 20px 20px 20px 0; /* Adds margin around the container */
-    box-shadow: -4px 0 6px -2px #e0e0e0; /* Soft shadow on the left edge */
-    position: relative;
+    margin: 20px 20px 20px 0;
+    box-shadow: -4px 0 6px -2px rgba(0, 0, 0, 0.1);
 }
 
 
-/* Style for the introduction panel */
+/* Introduction panel style */
 .introduction-panel {
-    background-color: #f2f2f2; /* Add background color */
-    padding: 2px; /* Add padding for space around the content */
-    font-size: 18px; /* Adjust font size */
-    padding-left: 20px;
-    padding-right: 20px;
-    margin: 0px 20px 0px 20px;
+    padding: 20px; 
+    font-size: 16px;
+    margin: 0 0 20px 0;
+    border-radius: 8px; /* Rounded corners */
+    color: #ffc9c9; /* Darker text color for better readability */
+   
 }
+
 
 #stateSearch {
     position: absolute;

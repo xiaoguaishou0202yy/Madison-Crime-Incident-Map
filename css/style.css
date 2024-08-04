@@ -26,7 +26,7 @@ body {
 .left-container {
     flex: 1;                 /* Takes up 1 part of the available space */
     overflow-y: auto;        /* Enables scrolling if content is too long */
-    background-color: #FFFFFF;
+    background-color: #e3c6c6;
     padding: 20px;
     box-sizing: border-box;
     margin: 20px 20px 20px 20px; /* Adds margin around the container */
@@ -61,7 +61,7 @@ body {
 #right-container {
     flex: 1;
     overflow-y: auto;
-    background-color: #FFFFFF;
+    background-color: #e3c6c6;
     padding: 20px;
     box-sizing: border-box;
     margin: 20px 20px 20px 0;

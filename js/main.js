@@ -70,16 +70,9 @@ function callback(data) {
             iconAnchor: [12, 12], // point of the icon which will correspond to marker's location
             popupAnchor: [0, -12] // point from which the popup should open relative to the iconAnchor
         });
+        
 
-        var popupContent = `
-            <b>Incident Type: </b>${incidentType}<br>
-            <strong>Address:</strong> ${incident.properties.address}<br>
-            <strong>Case Number:</strong> ${incident.properties.CaseNumber}<br>
-            <strong>Incident Date:</strong> ${incident.properties.IncidentDate}<br>
-            ${displayField('Victim', incident.properties.Victim)}
-            ${displayField('Arrested', incident.properties.Arrested)}
-            ${displayField('Suspect', incident.properties.Suspect)}
-        `;
+        var popupContent = setPopup(incident);
 
         var marker = L.marker([coords[1], coords[0]], { icon: markerIcon })
             .bindPopup(popupContent)
@@ -148,3 +141,62 @@ function showIncidentDetails(incident) {
 function displayField(label, value) {
     return value ? `<strong>${label}:</strong> ${value}<br>` : '';
 }
+
+function filterByMonth() {
+    var selectedMonth = document.getElementById('monthFilter').value;
+
+    // Clear existing markers from the map
+    incidentMarkers.forEach(function(entry) {
+        map.removeLayer(entry.marker);
+    });
+
+    // Filter incidents based on the selected month
+    var filteredIncidents = incidents.filter(function(incident) {
+        var incidentDate = new Date(incident.properties.IncidentDate);
+        var incidentMonth = ("0" + (incidentDate.getMonth() + 1)).slice(-2); // Get month in MM format
+        return selectedMonth === "all" || incidentMonth === selectedMonth;
+    });
+
+    // Add filtered incidents to the map
+    filteredIncidents.forEach(function(incident) {
+        var incidentType = incident.properties.IncidentType;
+        var coords = incident.geometry.coordinates;
+        var iconUrl = "img/" + incidentType + ".png"; // Assuming 'icon' property contains the URL to the icon
+
+        var markerIcon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: [25, 25], // size of the icon
+            iconAnchor: [12, 12], // point of the icon which will correspond to marker's location
+            popupAnchor: [0, -12] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var popupContent = setPopup(incident);
+
+        var marker = L.marker([coords[1], coords[0]], { icon: markerIcon })
+            .bindPopup(popupContent)
+            .on('click', function() {
+                showIncidentDetails(incident);
+            });
+
+        if (marker) {
+            marker.addTo(map);
+            incidentMarkers.push({ marker: marker, type: incidentType });
+        }
+    });
+}
+
+
+// Function to create popup content
+function setPopup(incident) {
+    var popupContent = `
+        <b>Incident Type: </b>${incident.properties.IncidentType}<br>
+        <strong>Address:</strong> ${incident.properties.address}<br>
+        <strong>Case Number:</strong> ${incident.properties.CaseNumber}<br>
+        <strong>Incident Date:</strong> ${incident.properties.IncidentDate}<br>
+        ${displayField('Victim', incident.properties.Victim)}
+        ${displayField('Arrested', incident.properties.Arrested)}
+        ${displayField('Suspect', incident.properties.Suspect)}
+    `;
+    return popupContent;
+}
+

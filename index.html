@@ -44,7 +44,7 @@
             
             <div class="left-container">
                 <label for="incidentTypeFilter">Filter by Incident Type:</label>
-                <select id="incidentTypeFilter" onchange="filterIncidents()">
+                <select id="incidentTypeFilter">
                     <option value="All">All</option>
                     <option value="Animal Complaint - Disturbance">Animal Complaint - Disturbance</option>
                     <option value="Arrested Person">Arrested Person</option>
@@ -84,7 +84,7 @@
 
 
                 <label for="monthFilter">Filter by Month:</label>
-                <select id="monthFilter" onchange="filterByMonth()">
+                <select id="monthFilter">
                     <option value="all">All</option>
                     <option value="01">January</option>
                     <option value="02">February</option>
@@ -93,6 +93,10 @@
                     <option value="05">May</option>
                     <option value="06">June</option>
                 </select>
+
+                <br></br>
+
+                <button onclick="applyFilters()">Apply Filters</button>
             </div> 
 
             <div class="map-container">

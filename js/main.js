@@ -29,6 +29,9 @@ function callback(data) {
     neighborhoodAssociations = topojson.feature(nbhs, nbhs.objects.Neighborhood_Associations).features;
     incidents = topojson.feature(incd, incd.objects.collection).features;
 
+    // Sort incidents by occurrence time
+    incidents.sort((a, b) => new Date(a.properties.IncidentDate) - new Date(b.properties.IncidentDate));
+
     // Create an SVG layer for D3 overlay
     var svg = d3.select(map.getPanes().overlayPane).append("svg");
     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
@@ -50,15 +53,9 @@ function callback(data) {
         .style("fill", "rgba(0, 0, 0, 0.1)") // Transparent fill color
         .style("stroke", "black");
 
-    // Define styles for different incident types
-    var styleTypes = {
-        "Intoxicated/Impaired Driver": {radius: 3, fillColor: "yellow", color: "yellow", shape: "circle"},
-        "Traffic Incident": {radius: 3, fillColor: "cyan", color: "cyan", shape: "circle"},
-        "Weapons Violation": {radius: 3, fillColor: "orange", color: "orange", shape: "circle"},
-    };
 
     // Add incident points
-    incidents.forEach(function(incident) {
+    incidents.forEach(function(incident) { //capture index
         var incidentType = incident.properties.IncidentType;
         var coords = incident.geometry.coordinates;
         var iconUrl = "img/"+incidentType+".png"; // Assuming 'icon' property contains the URL to the icon
@@ -74,16 +71,22 @@ function callback(data) {
 
         var popupContent = setPopup(incident);
 
-        var marker = L.marker([coords[1], coords[0]], { icon: markerIcon })
-            .bindPopup(popupContent)
-            .on('click', function() {
-                showIncidentDetails(incident);
-            });
-        if (marker) {
-            marker.addTo(map);
-            incidentMarkers.push({marker: marker, type: incidentType});
-        }
+        // Delay the addition of each marker
+        //setTimeout(function() {
+            var marker = L.marker([coords[1], coords[0]], { icon: markerIcon })
+                .bindPopup(popupContent)
+                .on('click', function() {
+                    showIncidentDetails(incident);
+                });
+            if (marker) {
+                marker.addTo(map);
+                incidentMarkers.push({marker: marker, type: incidentType});
+            }
+        //}, index * 500); // 500ms delay between each marker
     });
+
+
+
 
     map.on("viewreset", reset);
     map.on("zoom", reset); 
@@ -111,16 +114,6 @@ function callback(data) {
     console.log("Neighborhood paths added to map.");
 }
 
-function filterIncidents() {
-    var selectedType = document.getElementById('incidentTypeFilter').value;
-    incidentMarkers.forEach(function(entry) {
-        if (selectedType === "All" || entry.type === selectedType) {
-            entry.marker.addTo(map);
-        } else {
-            map.removeLayer(entry.marker);
-        }
-    });
-}
 
 function continueToMap() {
     var initialPage = document.getElementById('initialPage');
@@ -142,49 +135,6 @@ function displayField(label, value) {
     return value ? `<strong>${label}:</strong> ${value}<br>` : '';
 }
 
-function filterByMonth() {
-    var selectedMonth = document.getElementById('monthFilter').value;
-
-    // Clear existing markers from the map
-    incidentMarkers.forEach(function(entry) {
-        map.removeLayer(entry.marker);
-    });
-
-    // Filter incidents based on the selected month
-    var filteredIncidents = incidents.filter(function(incident) {
-        var incidentDate = new Date(incident.properties.IncidentDate);
-        var incidentMonth = ("0" + (incidentDate.getMonth() + 1)).slice(-2); // Get month in MM format
-        return selectedMonth === "all" || incidentMonth === selectedMonth;
-    });
-
-    // Add filtered incidents to the map
-    filteredIncidents.forEach(function(incident) {
-        var incidentType = incident.properties.IncidentType;
-        var coords = incident.geometry.coordinates;
-        var iconUrl = "img/" + incidentType + ".png"; // Assuming 'icon' property contains the URL to the icon
-
-        var markerIcon = L.icon({
-            iconUrl: iconUrl,
-            iconSize: [25, 25], // size of the icon
-            iconAnchor: [12, 12], // point of the icon which will correspond to marker's location
-            popupAnchor: [0, -12] // point from which the popup should open relative to the iconAnchor
-        });
-
-        var popupContent = setPopup(incident);
-
-        var marker = L.marker([coords[1], coords[0]], { icon: markerIcon })
-            .bindPopup(popupContent)
-            .on('click', function() {
-                showIncidentDetails(incident);
-            });
-
-        if (marker) {
-            marker.addTo(map);
-            incidentMarkers.push({ marker: marker, type: incidentType });
-        }
-    });
-}
-
 
 // Function to create popup content
 function setPopup(incident) {
@@ -200,3 +150,50 @@ function setPopup(incident) {
     return popupContent;
 }
 
+function applyFilters() {
+    var selectedType = document.getElementById('incidentTypeFilter').value;
+    var selectedMonth = document.getElementById('monthFilter').value;
+
+    // Clear existing markers from the map
+    incidentMarkers.forEach(function(entry) {
+        map.removeLayer(entry.marker);
+    });
+
+    // Filter incidents based on the selected type and month
+    var filteredIncidents = incidents.filter(function(incident) {
+        var incidentDate = new Date(incident.properties.IncidentDate);
+        var incidentMonth = ("0" + (incidentDate.getMonth() + 1)).slice(-2); // Get month in MM format
+        var matchesType = selectedType === "All" || incident.properties.IncidentType === selectedType;
+        var matchesMonth = selectedMonth === "all" || incidentMonth === selectedMonth;
+        return matchesType && matchesMonth;
+    });
+
+    // Add filtered incidents to the map
+    filteredIncidents.forEach(function(incident,i) {
+        var incidentType = incident.properties.IncidentType;
+        var coords = incident.geometry.coordinates;
+        var iconUrl = "img/" + incidentType + ".png"; // Assuming 'icon' property contains the URL to the icon
+
+        var markerIcon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: [25, 25], // size of the icon
+            iconAnchor: [12, 12], // point of the icon which will correspond to marker's location
+            popupAnchor: [0, -12] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var popupContent = setPopup(incident);
+
+        setTimeout(function() {
+            var marker = L.marker([coords[1], coords[0]], { icon: markerIcon })
+                .bindPopup(popupContent)
+                .on('click', function() {
+                    showIncidentDetails(incident);
+                });
+
+            if (marker) {
+                marker.addTo(map);
+                incidentMarkers.push({ marker: marker, type: incidentType });
+            }
+        }, i * 500); // 500ms delay between each marker
+    });
+}

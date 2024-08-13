@@ -30,7 +30,14 @@
             </div>
         </div> -->
 
-        <h1 class="page-title">Madison Crime Incident Map</h1> <!-- Added main title -->
+        <div id="titleContainer">
+            <img src="img/badger.gif" id="badgerImage" alt="Badger">
+            <h1 class="page-title">
+                Madison Crime Incident Map
+            </h1> <!-- Added main title -->
+        </div>
+
+
         <div class="introduction-panel">
             <p>Welcome to the Madison Crime Incident Map. This interactive tool allows you to explore and analyze crime incidents across Madison. Use the filter to view specific types of incidents and click on any point on the map to get detailed information about each incident. Our goal is to provide a comprehensive and accessible way for residents and policymakers to stay informed about local crime trends and improve community safety. Start exploring to learn more about crime in your area.</p>
         </div>
@@ -106,13 +113,12 @@
                 
             </div>   <!-- Container for the map -->
 
-            <div id="right-container">
-                Click on a point of interest to view more information.
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
-                <img src="img/badger.gif" alt="Incident GIF" style="max-width: 80%; height: auto; margin: 0 auto; display: block;">
+            <!-- Right Sidebar -->
+            <div id="right-container" class="right-container collapsed">
+                <button id="toggleSidebar" onclick="toggleSidebar()">&#10095;</button> <!-- Button to toggle sidebar -->
+                <div id="sidebarContent">
+                    Click on a point of interest to view more information.
+                </div>
             </div>
 
         </div>

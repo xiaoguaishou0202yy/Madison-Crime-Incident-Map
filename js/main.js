@@ -50,7 +50,7 @@ function callback(data) {
         .data(neighborhoodAssociations)
         .enter().append("path")
         .attr("class", "neighborhood")
-        .style("fill", "rgba(0, 0, 0, 0.1)") // Transparent fill color
+        .style("fill", "rgba(0, 0, 0, 0.3)") // Transparent fill color
         .style("stroke", "black");
 
 
@@ -196,4 +196,45 @@ function applyFilters() {
             }
         }, i * 500); // 500ms delay between each marker
     });
+}
+
+
+// Function to toggle the sidebar visibility
+function toggleSidebar() {
+    var sidebar = document.getElementById("right-container");
+    var mapContainer = document.querySelector(".map-container");
+    var toggleButton = document.getElementById("toggleSidebar");
+
+    if (sidebar.classList.contains("collapsed")) {
+        sidebar.classList.remove("collapsed");
+        mapContainer.style.flex = "3";
+        toggleButton.innerHTML = "&#10094;"; // Change button to "close" symbol
+    } else {
+        sidebar.classList.add("collapsed");
+        mapContainer.style.flex = "4"; // Expand map when sidebar is collapsed
+        toggleButton.innerHTML = "&#10095;"; // Change button to "open" symbol
+    }
+
+    // Trigger map resize
+    setTimeout(function() {
+        map.invalidateSize(); // Ensure the map redraws itself
+    }, 300); // Timeout to match the CSS transition duration
+}
+
+// Function to show the sidebar when a point is clicked
+function showSidebarWithContent(content) {
+    var sidebar = document.getElementById("right-container");
+    var mapContainer = document.querySelector(".map-container");
+    var toggleButton = document.getElementById("toggleSidebar");
+    var sidebarContent = document.getElementById("sidebarContent");
+
+    sidebarContent.innerHTML = content; // Set the content
+    sidebar.classList.remove("collapsed");
+    mapContainer.style.flex = "3";
+    toggleButton.innerHTML = "&#10094;"; // Change button to "close" symbol
+
+    // Trigger map resize
+    setTimeout(function() {
+        map.invalidateSize(); // Ensure the map redraws itself
+    }, 300); // Timeout to match the CSS transition duration
 }

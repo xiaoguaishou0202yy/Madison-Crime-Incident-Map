@@ -1,19 +1,41 @@
 /* Stylesheet by Zhiyi Li, 2024 */
 
+/* Base Styling */
 body {
     background-color: #a44646;
     font-family: 'Arial', sans-serif;
     margin: 0; /* Remove default margin */
+    color: #333; /* Default text color */
 }
 
-/* Style for the main title */
+/* Title Container */
+#titleContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center align horizontally */
+    padding: 10px 0;
+    background-color: #621616; /* Darker background color */
+    color: #FFFFFF; /* White text color */
+}
+
+#badgerImage {
+    width: 50px;
+    height: auto;
+    margin-right: 15px;
+}
+
 .page-title {
-    text-align: center; /* Center align the title */
-    margin-top: 10px; /* Adjust top margin as needed */
-    padding: 10px 0px; /* Add padding for space around the title */
-    color: #FFFFFF;
-    font-size: 32px; /* Adjust font size */
-    background-color: #621616; /* Darker shade for the title background */
+    font-size: 32px;
+    margin: 0;
+}
+
+/* Introduction panel style */
+.introduction-panel {
+    font-size: 16px;
+    margin: 0px 20px 0px 20px;
+    border-radius: 8px; /* Rounded corners */
+    color: #ffe6e6; /* Darker text color for better readability */
+   
 }
 
 .container {
@@ -31,25 +53,27 @@ body {
     box-sizing: border-box;
     margin: 20px 20px 20px 20px; /* Adds margin around the container */
     box-shadow: -4px 0 6px -2px rgba(0, 0, 0, 0.1); /* Soft shadow on the left edge */
-    position: relative;
+}
+
+.left-container select,
+.left-container button {
+    width: 100%; /* Make filters and button full width */
+    padding: 5px;
+    margin-top: 5px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
 }
 
 .map-container {
     flex: 3;                 /* Takes up 3 parts of the available space, making it larger than the chart */
     position: relative;
-    margin: 20px 20px 20px 0; /* Adds margin around the container */
+    margin: 0px 20px 0px 0; /* Adds margin around the container */
     background-color: #f2f2f2; /* Light grey background */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Slight shadow */
 }
 
-.reset-button {
-    background-color: #fff;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 14px;
-}
+
 
 #map {
     width: 100%;
@@ -57,73 +81,49 @@ body {
 }
 
 
-/* Right container style */
+/* Right Sidebar Container */
 #right-container {
     flex: 1;
-    overflow-y: auto;
     background-color: #e3c6c6;
     padding: 20px;
-    box-sizing: border-box;
-    margin: 20px 20px 20px 0;
-    box-shadow: -4px 0 6px -2px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease; /* Smooth transition */
+    position: relative;
 }
 
-
-/* Introduction panel style */
-.introduction-panel {
-    font-size: 16px;
-    margin: 0px 20px 0px 20px;
-    border-radius: 8px; /* Rounded corners */
-    color: #ffe6e6; /* Darker text color for better readability */
-   
+#right-container.collapsed {
+    flex: 0;
+    width: 0;
+    overflow: hidden;
+    padding: 0;
+    border: none;
 }
 
+#sidebarContent {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
 
-#stateSearch {
+#right-container.collapsed #sidebarContent {
+    opacity: 0; /* Fade out the content when collapsing */
+}
+
+/* Toggle Button Style */
+#toggleSidebar {
     position: absolute;
-    display: flex;
-    justify-content: space-between;
-    margin-right: 10px; /* Add some spacing between the input and button */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-#searchButton {
-    position: absolute;
-    left: 260px;
-    z-index: 10;
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 10px;
-    background-color: #0da982; /* Blue color for the button */
-    color: #fff; /* White text color */
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#initialPage {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+    top: 50%; /* Center vertically */
+    left: -30px; /* Position outside of the sidebar when expanded */
+    transform: translateY(-50%); /* Adjust to keep the button centered */
+    background-color: #621616;
     color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    z-index: 1000; /* Ensure it's above all other content */
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    font-size: 18px;
+    z-index: 1000; /* Ensure the button stays on top */
 }
 
-#initialPage .content {
-    max-width: 600px;
-    padding: 20px;
-}
-
-.search-bar:hover + .tooltip {
-    visibility: visible;
-}

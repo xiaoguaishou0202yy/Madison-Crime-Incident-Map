@@ -121,13 +121,32 @@ function continueToMap() {
 }
 
 
-// Function to update the right container with incident details
+// Function to update the right container with incident details and show the sidebar if collapsed
 function showIncidentDetails(incident) {
     var details = `
         <h3>${incident.properties.IncidentType}</h3>
         <p>${incident.properties.Details}</p>
     `;
-    document.getElementById('right-container').innerHTML = details;
+
+    // Get the sidebar element
+    var sidebar = document.getElementById('right-container');
+    var mapContainer = document.querySelector(".map-container");
+    var toggleButton = document.getElementById("toggleSidebar");
+
+    // Check if the sidebar is collapsed
+    if (sidebar.classList.contains('collapsed')) {
+        sidebar.classList.remove('collapsed');
+        mapContainer.style.flex = "3";
+        toggleButton.innerHTML = "&#10094;"; // Change button to "close" symbol
+
+        // Trigger map resize
+        setTimeout(function() {
+            map.invalidateSize(); // Ensure the map redraws itself
+        }, 300); // Timeout to match the CSS transition duration
+    }
+
+    // Update the sidebar content with the incident details
+    document.getElementById('sidebarContent').innerHTML = details;
 }
 
 // Utility function to conditionally display fields
@@ -230,6 +249,7 @@ function showSidebarWithContent(content) {
     sidebarContent.innerHTML = content; // Set the content
     sidebar.classList.remove("collapsed");
     mapContainer.style.flex = "3";
+    toggleButton.style.display = "block"; // Ensure the toggle button is visible
     toggleButton.innerHTML = "&#10094;"; // Change button to "close" symbol
 
     // Trigger map resize

@@ -199,7 +199,6 @@ function applyFilters() {
 }
 
 
-// Function to toggle the sidebar visibility
 function toggleSidebar() {
     var sidebar = document.getElementById("right-container");
     var mapContainer = document.querySelector(".map-container");
@@ -238,3 +237,4 @@ function showSidebarWithContent(content) {
         map.invalidateSize(); // Ensure the map redraws itself
     }, 300); // Timeout to match the CSS transition duration
 }
+

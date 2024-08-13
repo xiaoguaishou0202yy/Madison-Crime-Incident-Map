@@ -44,15 +44,23 @@ body {
     height: calc(100vh-52px);           /* Spans the full height of the viewport */
 }
 
+/* General Box Sizing */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 
+
+/* Left Sidebar Container */
 .left-container {
     flex: 1;                 /* Takes up 1 part of the available space */
     overflow-y: auto;        /* Enables scrolling if content is too long */
     background-color: #e3c6c6;
     padding: 20px;
-    box-sizing: border-box;
-    margin: 20px 20px 20px 20px; /* Adds margin around the container */
+    margin: 5px 10px 20px 20px; /* Adds margin around the container */
     box-shadow: -4px 0 6px -2px rgba(0, 0, 0, 0.1); /* Soft shadow on the left edge */
+    
 }
 
 .left-container select,
@@ -68,16 +76,17 @@ body {
 .map-container {
     flex: 3;                 /* Takes up 3 parts of the available space, making it larger than the chart */
     position: relative;
-    margin: 0px 20px 0px 0; /* Adds margin around the container */
+    margin: 5px 0px 20px 0px; /* Adds margin around the container */
     background-color: #f2f2f2; /* Light grey background */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Slight shadow */
+    transition: flex 0.3s ease;
 }
 
 
 
 #map {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 140px);
 }
 
 
@@ -86,10 +95,11 @@ body {
     flex: 1;
     background-color: #e3c6c6;
     padding: 20px;
-    border-radius: 8px;
+    margin: 5px 20px 20px 0px; 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease; /* Smooth transition */
     position: relative;
+    overflow-y: auto; /* Enable scrolling if the content is too long */
 }
 
 #right-container.collapsed {
@@ -111,19 +121,20 @@ body {
 
 /* Toggle Button Style */
 #toggleSidebar {
-    position: absolute;
+    position: fixed; /* Fix the button's position */
     top: 50%; /* Center vertically */
-    left: -30px; /* Position outside of the sidebar when expanded */
+    right: 0; /* Always on the right side */
     transform: translateY(-50%); /* Adjust to keep the button centered */
     background-color: #621616;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 4px 0 0 4px; /* Rounded corners */
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
     font-size: 18px;
     z-index: 1000; /* Ensure the button stays on top */
 }
+
 

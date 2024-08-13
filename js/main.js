@@ -32,6 +32,10 @@ function callback(data) {
     // Sort incidents by occurrence time
     incidents.sort((a, b) => new Date(a.properties.IncidentDate) - new Date(b.properties.IncidentDate));
 
+    // Count incidents in each neighborhood
+    countIncidentsInNeighborhoods(neighborhoodAssociations, incidents);
+
+
     // Create an SVG layer for D3 overlay
     var svg = d3.select(map.getPanes().overlayPane).append("svg");
     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
@@ -50,8 +54,18 @@ function callback(data) {
         .data(neighborhoodAssociations)
         .enter().append("path")
         .attr("class", "neighborhood")
-        .style("fill", "rgba(0, 0, 0, 0.3)") // Transparent fill color
-        .style("stroke", "black");
+        .style("fill", function(d) {
+            return getColor(d.properties.incidentCount);
+        })
+        .style("stroke", "black")
+        .on('mouseover', function(d) {
+            // Show a tooltip with the number of incidents
+            L.popup()
+                .setLatLng([d.geometry.coordinates[0][0][1], d.geometry.coordinates[0][0][0]])
+                .setContent("Incidents: " + d.properties.incidentCount)
+                .openOn(map);
+        });
+
 
 
     // Add incident points
@@ -215,6 +229,12 @@ function applyFilters() {
             }
         }, i * 500); // 500ms delay between each marker
     });
+
+    // Recount incidents in neighborhoods based on the filtered incidents
+    countIncidentsInNeighborhoods(neighborhoodAssociations, filteredIncidents);
+
+    // Update neighborhood colors based on the new counts
+    updateNeighborhoodColors();
 }
 
 
@@ -258,3 +278,57 @@ function showSidebarWithContent(content) {
     }, 300); // Timeout to match the CSS transition duration
 }
 
+
+// Function to count incidents within each neighborhood
+function countIncidentsInNeighborhoods(neighborhoods, incidents) {
+    neighborhoods.forEach(function(neighborhood) {
+        var count = 0;
+
+        incidents.forEach(function(incident) {
+            var incidentPoint = [incident.geometry.coordinates[0], incident.geometry.coordinates[1]];
+            var polygonCoords = neighborhood.geometry.coordinates[0]; // Assumes simple polygon
+
+            if (pointInPolygon(incidentPoint, polygonCoords)) {
+                count++;
+            }
+        });
+
+        // Store the count in the neighborhood's properties
+        neighborhood.properties.incidentCount = count;
+        console.log(neighborhood.properties.incidentCount); // Debugging line
+    });
+}
+
+// Example color function with more emphasis on red tones
+function getColor(count) {
+    return count > 50 ? 'rgba(102, 0, 0, 0.8)' :      // Dark Red with less brightness
+           count > 20 ? 'rgba(153, 0, 0, 0.7)' :      // Darker Red
+           count > 10 ? 'rgba(178, 34, 34, 0.6)' :    // Firebrick Red
+           count > 5  ? 'rgba(205, 92, 92, 0.5)' :    // Indian Red
+           count > 1  ? 'rgba(196, 196, 196, 0.3)' :  // Dim Grey (Darker)
+                        'rgba(107, 111, 114, 0.5)';      // Very Dark Grey
+}
+
+// Function to check if a point is inside a polygon
+function pointInPolygon(point, vs) {
+    var x = point[0], y = point[1];
+
+    var inside = false;
+    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        var xi = vs[i][0], yi = vs[i][1];
+        var xj = vs[j][0], yj = vs[j][1];
+
+        var intersect = ((yi > y) != (yj > y)) && 
+            (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+
+    return inside;
+}
+
+function updateNeighborhoodColors() {
+    d3.selectAll(".neighborhood")
+        .style("fill", function(d) {
+            return getColor(d.properties.incidentCount);
+        });
+}

@@ -5,7 +5,7 @@ body {
     background-color: #a44646;
     font-family: 'Arial', sans-serif;
     margin: 0; /* Remove default margin */
-    color: #333; /* Default text color */
+    color: #621616; /* Default text color */
 }
 
 /* Title Container */
@@ -66,15 +66,28 @@ body {
 .left-container select,
 .left-container button {
     width: 100%; /* Make filters and button full width */
-    padding: 5px;
+    padding: 6px;
     margin-top: 5px;
     font-size: 16px;
     border-radius: 4px;
     border: 1px solid #ccc;
+    cursor: pointer; /* Change cursor to pointer when hovering */
+}
+
+/* Specific Styling for the Apply Filters Button */
+#applyFilterButton {
+    background-color: #621616; /* Dark red background color */
+    color: #ffe6e6; /* White text color */
+    border: none; /* Remove border */
+
+}
+
+#applyFilterButton:hover {
+    background-color: #4d1212; /* Darker red on hover */
 }
 
 .map-container {
-    flex: 3;                 /* Takes up 3 parts of the available space, making it larger than the chart */
+    flex: 4;                 /* Takes up 3 parts of the available space, making it larger than the chart */
     position: relative;
     margin: 5px 0px 20px 0px; /* Adds margin around the container */
     background-color: #f2f2f2; /* Light grey background */
@@ -94,11 +107,12 @@ body {
 #right-container {
     flex: 1;
     background-color: #e3c6c6;
-    padding: 20px;
+    padding: 30px;
     margin: 5px 20px 20px 0px; 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease; /* Smooth transition */
     position: relative;
+    max-height: 680px;
     overflow-y: auto; /* Enable scrolling if the content is too long */
 }
 
@@ -123,7 +137,7 @@ body {
 #toggleSidebar {
     position: fixed; /* Fix the button's position */
     top: 50%; /* Center vertically */
-    right: 0; /* Always on the right side */
+    right: 20px; /* Always on the right side */
     transform: translateY(-50%); /* Adjust to keep the button centered */
     background-color: #621616;
     color: white;

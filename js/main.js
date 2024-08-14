@@ -2,7 +2,13 @@ var map, neighborhoodAssociations, incidents, incidentMarkers = [];
 
 window.onload = function() { 
     setMap(); 
+
+    // Add event listeners for the layer toggle checkboxes
+    document.getElementById('toggleNeighborhoods').addEventListener('change', toggleNeighborhoodsLayer);
+    document.getElementById('toggleIncidents').addEventListener('change', toggleIncidentsLayer);
 };
+
+var neighborhoodLayerGroup, incidentLayerGroup;
 
 function setMap() {
     // Initialize Leaflet map
@@ -14,6 +20,10 @@ function setMap() {
         subdomains: 'abcd',
         maxZoom: 19
     }).addTo(map);
+
+    // Initialize layer groups for neighborhoods and incidents
+    neighborhoodLayerGroup = L.layerGroup().addTo(map);
+    incidentLayerGroup = L.layerGroup().addTo(map);
 
     // Use Promise.all to parallelize asynchronous data loading
     var promises = []; 
@@ -35,92 +45,11 @@ function callback(data) {
     // Count incidents in each neighborhood
     countIncidentsInNeighborhoods(neighborhoodAssociations, incidents);
 
+    // Add neighborhood paths to the layer group
+    addNeighborhoodPaths();
 
-    // Create an SVG layer for D3 overlay
-    var svg = d3.select(map.getPanes().overlayPane).append("svg");
-    var g = svg.append("g").attr("class", "leaflet-zoom-hide");
-
-    // Create a project function to convert latitude and longitude to map positions
-    function projectPoint(x, y) {
-        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-        this.stream.point(point.x, point.y);
-    }
-
-    var transform = d3.geoTransform({point: projectPoint});
-    var path = d3.geoPath().projection(transform);
-
-    // Add neighborhood paths
-    var neighborhoodPaths = g.selectAll(".neighborhood")
-        .data(neighborhoodAssociations)
-        .enter().append("path")
-        .attr("class", "neighborhood")
-        .style("fill", function(d) {
-            return getColor(d.properties.incidentCount);
-        })
-        .style("stroke", "black")
-        .on('mouseover', function(d) {
-            // Show a tooltip with the number of incidents
-            L.popup()
-                .setLatLng([d.geometry.coordinates[0][0][1], d.geometry.coordinates[0][0][0]])
-                .setContent("Incidents: " + d.properties.incidentCount)
-                .openOn(map);
-        });
-
-
-
-    // Add incident points
-    incidents.forEach(function(incident) { //capture index
-        var incidentType = incident.properties.IncidentType;
-        var coords = incident.geometry.coordinates;
-        var iconUrl = "img/"+incidentType+".png"; // Assuming 'icon' property contains the URL to the icon
-
-
-        var markerIcon = L.icon({
-            iconUrl: iconUrl,
-            iconSize: [25, 25], // size of the icon
-            iconAnchor: [12, 12], // point of the icon which will correspond to marker's location
-            popupAnchor: [0, -12] // point from which the popup should open relative to the iconAnchor
-        });
-        
-
-        var popupContent = setPopup(incident);
-
-        // Delay the addition of each marker
-        //setTimeout(function() {
-            var marker = L.marker([coords[1], coords[0]], { icon: markerIcon })
-                .bindPopup(popupContent)
-                .on('click', function() {
-                    showIncidentDetails(incident);
-                });
-            if (marker) {
-                marker.addTo(map);
-                incidentMarkers.push({marker: marker, type: incidentType});
-            }
-        //}, index * 500); // 500ms delay between each marker
-    });
-
-
-
-
-    map.on("viewreset", reset);
-    map.on("zoom", reset); 
-    reset();
-
-    // Function to reset and reposition the SVG layer
-    function reset() {
-        var bounds = path.bounds({type: "FeatureCollection", features: neighborhoodAssociations}),
-            topLeft = bounds[0],
-            bottomRight = bounds[1];
-
-        svg.attr("width", bottomRight[0] - topLeft[0])
-            .attr("height", bottomRight[1] - topLeft[1])
-            .style("left", topLeft[0] + "px")
-            .style("top", topLeft[1] + "px");
-
-        g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
-
-        neighborhoodPaths.attr("d", path);
-    }
+    // Add incidents to the layer group
+    addIncidentMarkers();
 
 
     var chartContainer = document.querySelector(".chart-container");
@@ -183,6 +112,9 @@ function setPopup(incident) {
     return popupContent;
 }
 
+var isFilterApplied = false; // Track if a filter is applied
+var filteredIncidents = [];  // Store filtered incidents separately
+
 function applyFilters() {
     var selectedType = document.getElementById('incidentTypeFilter').value;
     var selectedMonth = document.getElementById('monthFilter').value;
@@ -200,6 +132,11 @@ function applyFilters() {
         var matchesMonth = selectedMonth === "all" || incidentMonth === selectedMonth;
         return matchesType && matchesMonth;
     });
+
+    addFilteredIncidentsToMap();
+
+    // Set the filter state to true
+    isFilterApplied = true;
 
     // Add filtered incidents to the map
     filteredIncidents.forEach(function(incident,i) {
@@ -235,6 +172,40 @@ function applyFilters() {
 
     // Update neighborhood colors based on the new counts
     updateNeighborhoodColors();
+}
+
+function addFilteredIncidentsToMap() {
+    // Clear existing markers from the incident layer group
+    incidentLayerGroup.clearLayers();
+
+    filteredIncidents.forEach(function(incident, i) {
+        var incidentType = incident.properties.IncidentType;
+        var coords = incident.geometry.coordinates;
+        var iconUrl = "img/" + incidentType + ".png"; // Assuming 'icon' property contains the URL to the icon
+
+        var markerIcon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: [25, 25],
+            iconAnchor: [12, 12],
+            popupAnchor: [0, -12]
+        });
+
+        var popupContent = setPopup(incident);
+
+        var marker = L.marker([coords[1], coords[0]], { icon: markerIcon })
+            .bindPopup(popupContent)
+            .on('click', function() {
+                showIncidentDetails(incident);
+            });
+
+        if (marker) {
+            marker.addTo(incidentLayerGroup);
+            incidentMarkers.push({ marker: marker, type: incidentType });
+        }
+    });
+
+    // Add the filtered incidents to the map
+    incidentLayerGroup.addTo(map);
 }
 
 
@@ -331,4 +302,101 @@ function updateNeighborhoodColors() {
         .style("fill", function(d) {
             return getColor(d.properties.incidentCount);
         });
+}
+
+function addNeighborhoodPaths() {
+    // Clear existing paths by removing the SVG
+    d3.select(map.getPanes().overlayPane).select("svg").remove();
+
+    var svg = d3.select(map.getPanes().overlayPane).append("svg");
+    var g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+    function projectPoint(x, y) {
+        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+        this.stream.point(point.x, point.y);
+    }
+
+    var transform = d3.geoTransform({ point: projectPoint });
+    var path = d3.geoPath().projection(transform);
+
+    g.selectAll(".neighborhood")
+        .data(neighborhoodAssociations)
+        .enter().append("path")
+        .attr("class", "neighborhood")
+        .style("fill", function(d) {
+            return getColor(d.properties.incidentCount);
+        })
+        .style("stroke", "black")
+        .on('mouseover', function(d) {
+            L.popup()
+                .setLatLng([d.geometry.coordinates[0][0][1], d.geometry.coordinates[0][0][0]])
+                .setContent("Incidents: " + d.properties.incidentCount)
+                .openOn(map);
+        });
+
+    // Ensure D3 paths are in sync with Leaflet map
+    map.on("viewreset", reset);
+    map.on("zoom", reset);
+    reset();
+
+    function reset() {
+        var bounds = path.bounds({ type: "FeatureCollection", features: neighborhoodAssociations }),
+            topLeft = bounds[0],
+            bottomRight = bounds[1];
+
+        svg.attr("width", bottomRight[0] - topLeft[0])
+            .attr("height", bottomRight[1] - topLeft[1])
+            .style("left", topLeft[0] + "px")
+            .style("top", topLeft[1] + "px");
+
+        g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+        g.selectAll("path").attr("d", path);
+    }
+}
+
+function addIncidentMarkers() {
+    // Clear existing markers from the layer group
+    incidentLayerGroup.clearLayers();
+
+    incidents.forEach(function(incident, i) {
+        var incidentType = incident.properties.IncidentType;
+        var coords = incident.geometry.coordinates;
+        var iconUrl = "img/" + incidentType + ".png";
+
+        var markerIcon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: [25, 25],
+            iconAnchor: [12, 12],
+            popupAnchor: [0, -12]
+        });
+
+        var popupContent = setPopup(incident);
+
+        var marker = L.marker([coords[1], coords[0]], { icon: markerIcon })
+            .bindPopup(popupContent)
+            .on('click', function() {
+                showIncidentDetails(incident);
+            });
+
+        if (marker) {
+            marker.addTo(incidentLayerGroup);
+        }
+    });
+
+    incidentLayerGroup.addTo(map);
+}
+
+function toggleNeighborhoodsLayer() {
+    var isChecked = document.getElementById('toggleNeighborhoods').checked;
+    d3.selectAll(".neighborhood").style("display", isChecked ? "block" : "none");
+}
+
+function toggleIncidentsLayer() {
+    var isChecked = document.getElementById('toggleIncidents').checked;
+    if (isChecked) {
+        map.addLayer(incidentLayerGroup);
+    } else {
+        map.removeLayer(incidentLayerGroup);
+    }
 }

@@ -263,12 +263,18 @@ function countIncidentsInNeighborhoods(neighborhoods, incidents) {
 
 // Example color function with more emphasis on red tones
 function getColor(count) {
-    return count > 50 ? 'rgba(102, 0, 0, 0.8)' :      // Dark Red with less brightness
+    return count > 50 ? 'rgba(88, 44, 44, 0.4)' :      // Darkest Red
+        count > 20 ? 'rgba(115, 44, 44, 0.4)' :     // Darker Red
+        count > 10 ? 'rgba(140, 46, 46, 0.4)' :     // Medium Dark Red
+        count > 5  ? 'rgba(165, 48, 48, 0.4)' :     // Medium Red
+        count > 0  ? 'rgba(190, 50, 50, 0.4)' :     // Light Red
+                    'rgba(40, 36, 36, 0.4)';
+/*     return count > 50 ? 'rgba(102, 0, 0, 0.8)' :      // Dark Red with less brightness
            count > 20 ? 'rgba(153, 0, 0, 0.7)' :      // Darker Red
            count > 10 ? 'rgba(178, 34, 34, 0.6)' :    // Firebrick Red
            count > 5  ? 'rgba(205, 92, 92, 0.5)' :    // Indian Red
            count > 1  ? 'rgba(196, 196, 196, 0.3)' :  // Dim Grey (Darker)
-                        'rgba(107, 111, 114, 0.5)';      // Very Dark Grey
+                        'rgba(107, 111, 114, 0.5)';      // Very Dark Grey */
 }
 
 // Function to check if a point is inside a polygon

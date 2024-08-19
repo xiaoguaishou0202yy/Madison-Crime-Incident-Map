@@ -5,7 +5,7 @@ body {
     background-color: #a44646;
     font-family: 'Arial', sans-serif;
     margin: 0; /* Remove default margin */
-    color: #621616; /* Default text color */
+    color: #6d2b2b; /* Default text color */
 }
 
 /* Title Container */
@@ -13,8 +13,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center; /* Center align horizontally */
-    padding: 10px 0;
-    background-color: #5a2a2a; /* Darker background color */
+    padding: 20px 0;
+    background-color: #6d2b2b; /* Darker background color */
     color: #FFFFFF; /* White text color */
     text-align: center;
 }
@@ -37,7 +37,7 @@ body {
     font-size: 16px;
     margin: 20px 40px 20px 40px;
     border-radius: 8px; /* Rounded corners */
-    color: #ffe6e6; /* Darker text color for better readability */
+    color: #ffffff; /* Darker text color for better readability */
    
 }
 
@@ -59,7 +59,7 @@ body {
 .left-container {
     flex: 1;                 /* Takes up 1 part of the available space */
     overflow-y: auto;        /* Enables scrolling if content is too long */
-    background-color: #f0e0e0;
+    background-color:#f3d2d2;  /*#f3d2d2 #e3c6c6*/
     padding: 20px;
     margin: 5px 10px 20px 20px; /* Adds margin around the container */
     box-shadow: -4px 0 6px -2px rgba(0, 0, 0, 0.1); /* Soft shadow on the left edge */
@@ -68,7 +68,7 @@ body {
 .left-container select,
 .left-container button {
     width: 100%; /* Make filters and button full width */
-    background-color: #a44646;
+    background-color: #c57272;
     color: white;
     padding: 6px;
     margin-top: 5px;
@@ -81,7 +81,7 @@ body {
 
 /* Specific Styling for the Apply Filters Button */
 #applyFilterButton {
-    background-color: #732c2c; /* Dark red background color */
+    background-color: #924040; /* Dark red background color */
     color: white; /* White text color */
     border: none; /* Remove border */
 }
@@ -90,33 +90,33 @@ body {
     font-size: 1.2em;
     color: #5a2a2a;
     margin-bottom: 15px;
+    margin-top:10px;
 }
 
 
 #applyFilterButton:hover {
-    background-color: #5a2a2a; /* Darker red on hover */
+    background-color: #6d2b2b; /* Darker red on hover */
 }
 
 /* Styling the layer-toggle container */
 .layer-toggle {
-    margin-top: 50px; /* Add some space at the top */
+    margin-top: 40px; /* Add some space at the top */
 }
 
 .layer-toggle input[type="checkbox"] {
 
     cursor: pointer; /* Add a pointer cursor on hover */
-    accent-color: #5a2a2a; /* Change the checkbox color to match the map theme */
+    accent-color: #924040; /* Change the checkbox color to match the map theme */
     transform: scale(1.36); /* Slightly scale up the checkbox */
 }
 
 .layer-toggle input[type="checkbox"]:checked {
-    background-color: #732c2c; /* Change the color when checked */
-    border-color: #732c2c; /* Match the border color when checked */
+    background-color: #924040; /* Change the color when checked */
+    border-color: #924040; /* Match the border color when checked */
 }
 
 .layer-toggle label {
     font-weight: bold;
-    color: #5a2a2a;
     display: block;
     margin-bottom: 10px;
 }
@@ -127,30 +127,24 @@ body {
 
 
 .legend {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #f0e0e0; /* Same background as sidebar */border-radius: 5px;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+    margin-top: 40px;
+
+   
 }
 
-.legendh3 {
-    font-size: 1.2em;
-    color: #5a2a2a; /* Match the theme color */margin-bottom: 10px;
-}
 
-.legenddiv {
+.legend div {
     display: flex;
     align-items: center;
-    margin-bottom: 8px;
+    margin: 8px 0px 8px 10px;
 }
 
 .legend-color {
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 32px;
+    height: 26px;
     margin-right: 10px;
-    border-radius: 3px;
-    border: 1px solid #ccc; /* Optional: adds a slight border around the color boxes */
+
 }
 
 
@@ -162,7 +156,7 @@ body {
     flex: 4;                 /* Takes up 3 parts of the available space, making it larger than the chart */
     position: relative;
     margin: 5px 0px 20px 0px; /* Adds margin around the container */
-    background-color: #732c2c; /* Light grey background */
+    background-color: #a44646; /* Light grey background */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Slight shadow */
     transition: flex 0.3s ease;
 }
@@ -178,7 +172,7 @@ body {
 /* Right Sidebar Container */
 #right-container {
     flex: 1;
-    background-color: #e3c6c6;
+    background-color: #f3d2d2;
     padding: 30px;
     margin: 5px 20px 20px 0px; 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -211,7 +205,7 @@ body {
     top: 50%; /* Center vertically */
     right: 20px; /* Always on the right side */
     transform: translateY(-50%); /* Adjust to keep the button centered */
-    background-color: #621616;
+    background-color: #924040;
     color: white;
     border: none;
     padding: 5px 10px;
@@ -221,6 +215,10 @@ body {
     transition: all 0.3s ease;
     font-size: 18px;
     z-index: 1000; /* Ensure the button stays on top */
+}
+
+#toggleSidebar:hover {
+    background-color: #6d2b2b; /* Darker red on hover */
 }
 
 

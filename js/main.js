@@ -274,7 +274,7 @@ function getColor(count) {
         count > 10 ? 'rgba(140, 46, 46, 0.6)' :     // Medium Dark Red
         count > 5  ? 'rgba(165, 48, 48, 0.5)' :     // Medium Red
         count > 0  ? 'rgba(190, 50, 50, 0.4)' :     // Light Red
-                    'rgba(200, 200, 200, 0.5)';
+                    'rgba(62, 62, 62, 0.5)';
 
 /*     return count > 50 ? 'rgba(102, 0, 0, 0.8)' :      // Dark Red with less brightness
            count > 20 ? 'rgba(153, 0, 0, 0.7)' :      // Darker Red
@@ -423,7 +423,7 @@ function updateLegend(maxCount) {
     if (maxCount > 0) {
         legendHtml += '<div><span class="legend-color" style="background-color: rgba(190, 50, 50, 0.4);"></span> 1 - 5 incidents</div>';
     }
-    legendHtml += '<div><span class="legend-color" style="background-color: rgba(200, 200, 200, 0.5);"></span> 0 incidents</div>';
+    legendHtml += '<div><span class="legend-color" style="background-color: rgba(62, 62, 62, 0.5);"></span> 0 incidents</div>';
 
     document.getElementById('legend').innerHTML = legendHtml;
 }

@@ -6,6 +6,13 @@ window.onload = function() {
     // Add event listeners for the layer toggle checkboxes
     document.getElementById('toggleNeighborhoods').addEventListener('change', toggleNeighborhoodsLayer);
     document.getElementById('toggleIncidents').addEventListener('change', toggleIncidentsLayer);
+
+    document.getElementById('resetMapButton').addEventListener('click', function() {
+        // Example: Resetting the map to its initial view
+        map.setView([43.0831, -89.4012], 11.5); // Set to your desired default coordinates and zoom level// Optional: If you have layers or filters applied, you may want to reset them too// Example: Remove any filters// applyFilters(); // Assuming this function re-applies default filters
+    });
+    
+
 };
 
 var neighborhoodLayerGroup, incidentLayerGroup;

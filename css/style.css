@@ -19,11 +19,12 @@ body {
     text-align: center;
 }
 
+
+
 #badgerImage {
     width: 50px;
     height: auto;
     margin-right: 15px;
-    color:white
 }
 
 .page-title {
@@ -34,7 +35,7 @@ body {
 /* Introduction panel style */
 .introduction-panel {
     font-size: 16px;
-    margin: 0px 20px 0px 20px;
+    margin: 20px 40px 20px 40px;
     border-radius: 8px; /* Rounded corners */
     color: #ffe6e6; /* Darker text color for better readability */
    
@@ -122,6 +123,34 @@ body {
 
 .layer-toggle label input {
     margin-right: 10px; /* Space between checkbox and label text */
+}
+
+
+.legend {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f0e0e0; /* Same background as sidebar */border-radius: 5px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.legendh3 {
+    font-size: 1.2em;
+    color: #5a2a2a; /* Match the theme color */margin-bottom: 10px;
+}
+
+.legenddiv {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.legend-color {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 3px;
+    border: 1px solid #ccc; /* Optional: adds a slight border around the color boxes */
 }
 
 

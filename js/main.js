@@ -161,6 +161,12 @@ function applyFilters() {
     // Recount incidents in neighborhoods based on the filtered incidents
     countIncidentsInNeighborhoods(neighborhoodAssociations, filteredIncidents);
 
+    // Determine the maximum incident count in neighborhoods
+    var maxCount = Math.max(...neighborhoodAssociations.map(d => d.properties.incidentCount));
+
+    // Update the legend based on the maximum count
+    updateLegend(maxCount);
+
     // Update neighborhood colors based on the new counts
     updateNeighborhoodColors();
 }
@@ -257,13 +263,13 @@ function countIncidentsInNeighborhoods(neighborhoods, incidents) {
 
         // Store the count in the neighborhood's properties
         neighborhood.properties.incidentCount = count;
-        //console.log(neighborhood.properties.incidentCount); // Debugging line
+        console.log(neighborhood.properties.incidentCount); // Debugging line
     });
 }
 
 // Example color function with more emphasis on red tones
 function getColor(count) {
-    return count > 50 ? 'rgba(88, 44, 44, 0.4)' :      // Darkest Red
+    return count == 40 ? 'rgba(88, 44, 44, 0.4)' :      // Darkest Red
         count > 20 ? 'rgba(115, 44, 44, 0.4)' :     // Darker Red
         count > 10 ? 'rgba(140, 46, 46, 0.4)' :     // Medium Dark Red
         count > 5  ? 'rgba(165, 48, 48, 0.4)' :     // Medium Red
@@ -396,4 +402,27 @@ function toggleIncidentsLayer() {
     } else {
         map.removeLayer(incidentLayerGroup);
     }
+}
+
+function updateLegend(maxCount) {
+    var legendHtml = '<h3>Neighborhood Incident Counts</h3>';
+
+    if (maxCount > 39) {
+        legendHtml += '<div><span class="legend-color" style="background-color: rgba(88, 44, 44, 0.4);"></span> > 50 incidents</div>';
+    }
+    if (maxCount > 20) {
+        legendHtml += '<div><span class="legend-color" style="background-color: rgba(115, 44, 44, 0.4);"></span> 21 - 50 incidents</div>';
+    }
+    if (maxCount > 10) {
+        legendHtml += '<div><span class="legend-color" style="background-color: rgba(140, 46, 46, 0.4);"></span> 11 - 20 incidents</div>';
+    }
+    if (maxCount > 5) {
+        legendHtml += '<div><span class="legend-color" style="background-color: rgba(165, 48, 48, 0.4);"></span> 6 - 10 incidents</div>';
+    }
+    if (maxCount > 0) {
+        legendHtml += '<div><span class="legend-color" style="background-color: rgba(190, 50, 50, 0.4);"></span> 1 - 5 incidents</div>';
+    }
+    legendHtml += '<div><span class="legend-color" style="background-color: rgba(40, 36, 36, 0.4);"></span> 0 incidents</div>';
+
+    document.getElementById('legend').innerHTML = legendHtml;
 }
